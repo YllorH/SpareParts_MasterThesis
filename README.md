@@ -1,5 +1,5 @@
 # SpareParts_MasterThesis
-Master Thesis - Data Science and Marketing Analytics at ESE - Spare Parts demand forecasting
+Master Thesis - Data Science and Marketing Analytics at ESE - Spare Parts demand forecasting.
 Forecasting the demands of spare parts, using 9 different methods on 8 data sets (industrial and simulated).
 The methuds used are:
   * Statistical methods:

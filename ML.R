@@ -68,8 +68,7 @@ MLP_Perf <- function(data, data_name) {
 ###############Forecasting Accuracy Measures (FAM)########################
 ##GMAE function
 GMAE_fun <- function(predicted, actual) {
-  absolute_errors <- abs(predicted - actual)
-  gmae <- exp(mean(log(absolute_errors), na.rm = TRUE))
+  gmae <- prod(abs(predicted - actual))^(1 / length(predicted))
   return(gmae)
 }
 ##FAM

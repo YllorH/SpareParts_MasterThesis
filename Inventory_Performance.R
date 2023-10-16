@@ -109,6 +109,9 @@ IPM_GAMMA <- function(data, train_data, test_data, predictions, prices, data_nam
   return(ServiceLevel)
 }
 
+### Remove scientific notations in plots ###
+# Function to set numbers with marks and without scientific notation
+marks_no_sci <- function(x) format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE)
 
 #####TRADE OFF CURVES ---- SIM1 ######
 servicelevelsSIM1 <- rbind(Croston_IPM_SIM1, SBA_IPM_SIM1, DLP_IPM_SIM1, Willemain_Service_level_SIM1, QR_IPM_SIM1, MLP_IPM_SIM1, LSTM_IPM_SIM1, LightGBM_IPM_SIM1, RF_IPM_SIM1)
@@ -119,12 +122,16 @@ kable(servicelevelsSIM1, "latex")
 ggplot(servicelevelsSIM1, aes(x = AchievedFillRates_Avg, y = HoldingCosts, group = Method)) +
   geom_line(aes(color = Method), size = 0.5) +
   geom_point(size = 0.5) +
+  scale_x_continuous(limits = c(0.76, 0.99), labels = scales::number_format(accuracy = 0.01)) +
+  scale_y_continuous(labels = marks_no_sci)+
   xlab("Average achieved fill rate") + ylab("Inventory holding costs")
 ggsave("Avg_achievedvsholdingSIM1.png")
 
 ggplot(servicelevelsSIM1, aes(x = AchievedFillRates_Total, y = HoldingCosts, group = Method)) +
   geom_line(aes(color = Method), size = 0.5) +
   geom_point(size = 0.5) +
+  scale_x_continuous(limits = c(0.75, 0.99), labels = scales::number_format(accuracy = 0.01)) +
+  scale_y_continuous(labels = marks_no_sci)+
   xlab("Total achieved fill rate") + ylab("Inventory holding costs")
 ggsave("Tot_achievedvsholdingSIM1.png")
 
@@ -137,12 +144,16 @@ kable(servicelevelsSIM2, "latex")
 ggplot(servicelevelsSIM2, aes(x = AchievedFillRates_Avg, y = HoldingCosts, group = Method)) +
   geom_line(aes(color = Method), size = 0.5) +
   geom_point(size = 0.5) +
+  #scale_x_continuous(limits = c(0.76, 0.98), labels = scales::number_format(accuracy = 0.01)) +
+  scale_y_continuous(labels = marks_no_sci)+
   xlab("Average achieved fill rate") + ylab("Inventory holding costs")
 ggsave("Avg_achievedvsholdingSIM2.png")
 
 ggplot(servicelevelsSIM2, aes(x = AchievedFillRates_Total, y = HoldingCosts, group = Method)) +
   geom_line(aes(color = Method), size = 0.5) +
   geom_point(size = 0.5) +
+  #scale_x_continuous(limits = c(0.70, 0.98), labels = scales::number_format(accuracy = 0.01)) +
+  scale_y_continuous(labels = marks_no_sci)+
   xlab("Total achieved fill rate") + ylab("Inventory holding costs")
 ggsave("Tot_achievedvsholdingSIM2.png")
 
@@ -155,12 +166,14 @@ kable(servicelevelsSIM3, "latex")
 ggplot(servicelevelsSIM3, aes(x = AchievedFillRates_Avg, y = HoldingCosts, group = Method)) +
   geom_line(aes(color = Method), size = 0.5) +
   geom_point(size = 0.5) +
+  scale_y_continuous(labels = marks_no_sci)+
   xlab("Average achieved fill rate") + ylab("Inventory holding costs")
 ggsave("Avg_achievedvsholdingSIM3.png")
 
 ggplot(servicelevelsSIM3, aes(x = AchievedFillRates_Total, y = HoldingCosts, group = Method)) +
   geom_line(aes(color = Method), size = 0.5) +
   geom_point(size = 0.5) +
+  scale_y_continuous(labels = marks_no_sci)+
   xlab("Total achieved fill rate") + ylab("Inventory holding costs")
 ggsave("Tot_achievedvsholdingSIM3.png")
 
@@ -173,17 +186,19 @@ kable(servicelevelsSIM4, "latex")
 ggplot(servicelevelsSIM4, aes(x = AchievedFillRates_Avg, y = HoldingCosts, group = Method)) +
   geom_line(aes(color = Method), size = 0.5) +
   geom_point(size = 0.5) +
+  scale_y_continuous(labels = marks_no_sci)+
   xlab("Average achieved fill rate") + ylab("Inventory holding costs")
 ggsave("Avg_achievedvsholdingSIM4.png")
 
 ggplot(servicelevelsSIM4, aes(x = AchievedFillRates_Total, y = HoldingCosts, group = Method)) +
   geom_line(aes(color = Method), size = 0.5) +
   geom_point(size = 0.5)  +
+  scale_y_continuous(labels = marks_no_sci)+
   xlab("Total achieved fill rate") + ylab("Inventory holding costs")
 ggsave("Tot_achievedvsholdingSIM4.png")
 
 
-#####TRADE OFF CURVES ---- MAN ######
+#####TRADE OFF CURVES ---- MAN with QR######
 servicelevelsMAN <- rbind(Croston_IPM_MAN, SBA_IPM_MAN, DLP_IPM_MAN, Willemain_Service_level_MAN, Quantile_IPM_MAN, MLP_IPM_MAN, LSTM_IPM_MAN, LightGBM_IPM_MAN, RF_IPM_MAN)
 # Saving the service level data.
 save(servicelevelsMAN,file="C:\\Users\\yllor\\OneDrive\\Bureau\\IPM_MAN.Rda")
@@ -192,17 +207,58 @@ kable(servicelevelsMAN, "latex")
 ggplot(servicelevelsMAN, aes(x = AchievedFillRates_Avg, y = HoldingCosts, group = Method)) +
   geom_line(aes(color = Method), size = 0.5) +
   geom_point(size = 0.5) +
+  scale_y_continuous(labels = marks_no_sci)+
+  xlab("Average achieved fill rate") + ylab("Inventory holding costs")
+ggsave("Avg_achievedvsholdingMAN_wQR.png")
+
+ggplot(servicelevelsMAN, aes(x = AchievedFillRates_Total, y = HoldingCosts, group = Method)) +
+  geom_line(aes(color = Method), size = 0.5) +
+  geom_point(size = 0.5) +
+  scale_y_continuous(labels = marks_no_sci)+
+  xlab("Total achieved fill rate") + ylab("Inventory holding costs")
+ggsave("Tot_achievedvsholdingMAN_wQR.png")
+
+#####TRADE OFF CURVES ---- MAN without QR ######
+servicelevelsMAN <- rbind(Croston_IPM_MAN, SBA_IPM_MAN, DLP_IPM_MAN, Willemain_Service_level_MAN, MLP_IPM_MAN, LSTM_IPM_MAN, LightGBM_IPM_MAN, RF_IPM_MAN)
+# Saving the service level data.
+save(servicelevelsMAN,file="C:\\Users\\yllor\\OneDrive\\Bureau\\IPM_MAN.Rda")
+kable(servicelevelsMAN, "latex")
+
+ggplot(servicelevelsMAN, aes(x = AchievedFillRates_Avg, y = HoldingCosts, group = Method)) +
+  geom_line(aes(color = Method), size = 0.5) +
+  geom_point(size = 0.5) +
+  scale_y_continuous(labels = marks_no_sci)+
   xlab("Average achieved fill rate") + ylab("Inventory holding costs")
 ggsave("Avg_achievedvsholdingMAN.png")
 
 ggplot(servicelevelsMAN, aes(x = AchievedFillRates_Total, y = HoldingCosts, group = Method)) +
   geom_line(aes(color = Method), size = 0.5) +
   geom_point(size = 0.5) +
+  scale_y_continuous(labels = marks_no_sci)+
   xlab("Total achieved fill rate") + ylab("Inventory holding costs")
 ggsave("Tot_achievedvsholdingMAN.png")
 
-#####TRADE OFF CURVES ---- BRAF ######
+
+#####TRADE OFF CURVES ---- BRAF with QR######
 servicelevelsBRAF <- rbind(Croston_IPM_BRAF, SBA_IPM_BRAF, DLP_IPM_BRAF, Willemain_Service_level_BRAF, Quantile_IPM_BRAF, MLP_IPM_BRAF, LSTM_IPM_BRAF, LightGBM_IPM_BRAF, RF_IPM_BRAF)
+# Saving the service level data.
+save(servicelevelsBRAF,file="C:\\Users\\yllor\\OneDrive\\Bureau\\IPM_BRAF.Rda")
+kable(servicelevelsBRAF, "latex")
+
+ggplot(servicelevelsBRAF, aes(x = AchievedFillRates_Avg, y = HoldingCosts, group = Method)) +
+  geom_line(aes(color = Method), size = 0.5) +
+  geom_point(size = 0.5) +
+  xlab("Average achieved fill rate") + ylab("Inventory holding costs")
+ggsave("Avg_achievedvsholdingBRAF_wQR.png")
+
+ggplot(servicelevelsBRAF, aes(x = AchievedFillRates_Total, y = HoldingCosts, group = Method)) +
+  geom_line(aes(color = Method), size = 0.5) +
+  geom_point(size = 0.5) +
+  xlab("Total achieved fill rate") + ylab("Inventory holding costs")
+ggsave("Tot_achievedvsholdingBRAF_wQR.png")
+
+#####TRADE OFF CURVES ---- BRAF without QR ######
+servicelevelsBRAF <- rbind(Croston_IPM_BRAF, SBA_IPM_BRAF, DLP_IPM_BRAF, Willemain_Service_level_BRAF, MLP_IPM_BRAF, LSTM_IPM_BRAF, LightGBM_IPM_BRAF, RF_IPM_BRAF)
 # Saving the service level data.
 save(servicelevelsBRAF,file="C:\\Users\\yllor\\OneDrive\\Bureau\\IPM_BRAF.Rda")
 kable(servicelevelsBRAF, "latex")
@@ -237,7 +293,7 @@ ggplot(servicelevelsAUTO, aes(x = AchievedFillRates_Total, y = HoldingCosts, gro
   xlab("Total achieved fill rate") + ylab("Inventory holding costs")
 ggsave("Tot_achievedvsholdingAUTO.png")
 
-#####TRADE OFF CURVES ---- OIL ######
+#####TRADE OFF CURVES ---- OIL with QR######
 servicelevelsOIL <- rbind(Croston_IPM_OIL, SBA_IPM_OIL, DLP_IPM_OIL, Willemain_Service_level_OIL, Quantile_IPM_OIL, MLP_IPM_OIL, LSTM_IPM_OIL, LightGBM_IPM_OIL, RF_IPM_OIL)
 # Saving the service level data.
 save(servicelevelsOIL,file="C:\\Users\\yllor\\OneDrive\\Bureau\\IPM_OIL.Rda")
@@ -246,11 +302,33 @@ kable(servicelevelsOIL, "latex")
 ggplot(servicelevelsOIL, aes(x = AchievedFillRates_Avg, y = HoldingCosts, group = Method)) +
   geom_line(aes(color = Method), size = 0.5) +
   geom_point(size = 0.5) +
+  scale_y_continuous(labels = marks_no_sci)+
+  xlab("Average achieved fill rate") + ylab("Inventory holding costs")
+ggsave("Avg_achievedvsholdingOIL_wQR.png")
+
+ggplot(servicelevelsOIL, aes(x = AchievedFillRates_Total, y = HoldingCosts, group = Method)) +
+  geom_line(aes(color = Method), size = 0.5) +
+  geom_point(size = 0.5) +
+  scale_y_continuous(labels = marks_no_sci)+
+  xlab("Total achieved fill rate") + ylab("Inventory holding costs")
+ggsave("Tot_achievedvsholdingOIL_wQR.png")
+
+#####TRADE OFF CURVES ---- OIL without QR######
+servicelevelsOIL <- rbind(Croston_IPM_OIL, SBA_IPM_OIL, DLP_IPM_OIL, Willemain_Service_level_OIL, MLP_IPM_OIL, LSTM_IPM_OIL, LightGBM_IPM_OIL, RF_IPM_OIL)
+# Saving the service level data.
+save(servicelevelsOIL,file="C:\\Users\\yllor\\OneDrive\\Bureau\\IPM_OIL.Rda")
+kable(servicelevelsOIL, "latex")
+
+ggplot(servicelevelsOIL, aes(x = AchievedFillRates_Avg, y = HoldingCosts, group = Method)) +
+  geom_line(aes(color = Method), size = 0.5) +
+  geom_point(size = 0.5) +
+  scale_y_continuous(labels = marks_no_sci)+
   xlab("Average achieved fill rate") + ylab("Inventory holding costs")
 ggsave("Avg_achievedvsholdingOIL.png")
 
 ggplot(servicelevelsOIL, aes(x = AchievedFillRates_Total, y = HoldingCosts, group = Method)) +
   geom_line(aes(color = Method), size = 0.5) +
   geom_point(size = 0.5) +
+  scale_y_continuous(labels = marks_no_sci)+
   xlab("Total achieved fill rate") + ylab("Inventory holding costs")
 ggsave("Tot_achievedvsholdingOIL.png")

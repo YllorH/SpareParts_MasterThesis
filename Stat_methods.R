@@ -268,8 +268,6 @@ SBA_Perf <- function(train_data, test_data, data_name) {
 }
 
 #DLP 
-#Code from Van Dalen 
-# Evaluate DLP for h-period ahead forecast, h = nrow(test_data)
 DLP_Perf <- function(train_data, test_data, data_name) {
   h <- nrow(test_data)                               # Number of periods to be predicted (for each item)
   numItems <- ncol(train_data)                       # Number of items
@@ -281,25 +279,22 @@ DLP_Perf <- function(train_data, test_data, data_name) {
     t <- nrow(train_data)                            # Number of periods used for predicting (updated every iteration below)
     
     # Initialize variables for DLP
-    fc.y <- rep(NA, t + h)                           # Forecast demand
-    fc.tau <- rep(NA, t + h)                         # Forecast lead-time
+    fc.tau <- rep(NA, t + h)                         # Forecasted intermittent time
     since.Last <- rep(NA, t + h)                     # Periods since last demand
-    p.t <- 1                                        # Initial value of p.t (intermittent factor)
+
     
     for (i in 1:h) {
       # Croston's method to forecast demand and lead-time
-      croston_result <- crost(x[1:t,], h = 1, w = NULL, nop = 2, type = "croston", cost = "mar", init = "naive", init.opt = FALSE, na.rm = TRUE)
-      
-      # Update DLP variables
-      fc.y[t+i] <- croston_result$frc.out
-      fc.tau[t+i] <- t
-      since.Last[t+i] <- 1
-      
-      # Calculate DLP forecast
-      p <- 1 / fc.tau[t+i]
-      predictions[i,j] <- (fc.y[t+i] / fc.tau[t+i]) * (h + (since.Last[t+i] - (1 - p) / p) * (1 - (1 - p) ^ h))
-      
-      t = t + 1
+      croston_result <- crost(x[1:t,], h = 1, w = NULL, nop = 2, type = "croston", cost = "mar", init = "naive", init.opt = FALSE, na.rm = TRUE)$frc.out
+        # Update DLP variables
+        fc.tau <- i
+        since.Last <- i
+        L <- 1  # 1 step-ahead forecast
+        # Calculate DLP forecast
+        p <- 1 / fc.tau
+        predictions[i,j] <- croston_result * (L + (since.Last - (1 - p) / p) * (1 - (1 - p) ^ L))
+        t = t + 1
+
     }
     
     print(paste("Done item", j))
@@ -309,13 +304,11 @@ DLP_Perf <- function(train_data, test_data, data_name) {
   predictions <- as.data.frame(predictions)
   
   # Saving
-  file_name <- paste("C:\\Users\\yllor\\OneDrive\\Bureau\\Thesis\\SpareParts\\DLP.R", data_name, ".Rda", sep = "")
+  file_name <- paste("C:\\Users\\yllor\\OneDrive\\Bureau\\Thesis\\SpareParts\\DLP_", data_name, ".Rda", sep = "")
   save(predictions, file = file_name)
   
   return(predictions)
 }
-
-DLP_Perf(trainSIM1, testSIM1, "SIM1")
 
 ############################# RUNNING METHODS ON DATA SETS #############################
 

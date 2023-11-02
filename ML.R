@@ -199,7 +199,7 @@ LightGBM_Perf <- function(data, data_name) {
   
   p <- unique(p) #the unique function creates multiple grids, such that all the given values for the hyperparams are used
   
-  #Training the LightGBM algorithm.
+  #Training the LightGBM algorithm
   
 
   cv_results <- lgb.cv(
@@ -241,7 +241,7 @@ LightGBM_Perf <- function(data, data_name) {
   numItems<-ncol(train_data)                       #Number of items
   predictions<-matrix(nrow=h,ncol=numItems)   #Matrix storing the predictions
   
-  #Predicting the forecast horizon with as input the last five values of a series and saving it as the predictions.
+  #Predicting the forecast horizon with as input the last five values of a series and saving it as the predictions
   for(j in seq_len(numItems)) {
     input<-tail(train_data[,j],n=5)
     for(i in seq_len(nrow(test_data))) {
@@ -322,14 +322,14 @@ RandomForest_Perf <- function(data, data_name) {
   for (i in 1:ncol(data)){
     mldata[,i]  <- normalize(data[,i])
   }  
-  # 1.2, Splitting the data again into test and train data.  
+  # 1.2, Splitting the data into test and train data.  
   sample = round(nrow(data)*.70) 
   train_data <- mldata[1:(sample), ]
   test_data <- mldata[-(1:(sample)), ]  
   # mldata variable, length 6 with 5 input and 1 output.
   n <- nrow(train_data)
   mldata <- matrix(ncol = 6, nrow = ncol(train_data) * (n - 5))  
-  # For loop that creates a 6 column data set with the first 5 as inputs to the neural net and the 6th column as the target variable.
+  # For loop that creates a 6 column data set with the first 5 as inputs and the 6th column as the target variable
   for (i in 1:ncol(train_data)){
     for (t in 1:6) {
       startRow <- ((i - 1) * (n - 5) + 1)
@@ -365,7 +365,7 @@ RandomForest_Perf <- function(data, data_name) {
   numItems<-ncol(train_data)                       #Number of items
   predictions<-matrix(nrow=h,ncol=numItems)   #Matrix storing the predictions
   
-  #Predicting the forecast horizon with as input the last five values of a series and saving it as the predictions.
+  #Predicting the forecast horizon with as input the last five values of a series and saving it as the predictions
   for(j in seq_len(numItems)) {
     input<-tail(train_data[,j],n=5)
     for(i in seq_len(nrow(test_data))) {
@@ -375,7 +375,7 @@ RandomForest_Perf <- function(data, data_name) {
     }
   }
   
-  #Denormalizing the data for evaluation of forecasts.
+  #Denormalizing the data for evaluation of forecasts
   for(i in seq_len(ncol(predictions))) {
     predictions[,i]<-predictions[,i]*(max(data[,i])-min(data[,i]))+min(data[,i])
   }
@@ -449,7 +449,7 @@ LSTM_Perf <- function(data, data_name) {
     mldata[,i]  <- normalize(data[,i])
   }
   
-  # 1.2 Splitting the data again into test and train data.
+  # 1.2 Splitting the data into test and train data.
   sample = round(nrow(data)*.70)
   train_data <- mldata[1:(sample), ]
   test_data <- mldata[-(1:(sample)), ]

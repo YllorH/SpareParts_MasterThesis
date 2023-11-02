@@ -420,58 +420,7 @@ SBA_FAM_OIL
 ##### Print running time #####
 print("time SBA total")
 proc.time() - ptm
-
-####### DLP ####### 
-#Code from Van Dalen 
-# Evaluate DLP for h-period ahead forecast, h = nrow(test_data)
-# DLP 
-
-DLP_Perf <- function(train_data, test_data, data_name) {
-  h <- nrow(test_data)                               # Number of periods to be predicted (for each item)
-  numItems <- ncol(train_data)                       # Number of items
-  predictions <- matrix(nrow = h, ncol = numItems)   # Matrix storing the predictions
-  
-  # For each item
-  for (j in 1:numItems) {
-    x <- rbind(train_data[j], test_data[j])          # All demands (train + test) of item j
-    t <- nrow(train_data)                            # Number of periods used for predicting (updated every iteration below)
-    
-    # Initialize variables for DLP
-    fc.y <- rep(NA, t)         # Forecast demand
-    fc.tau <- rep(NA, t)       # Forecast lead-time
-    since.Last <- rep(NA, t)   # Periods since the last demand
-    p.t <- 1                   # Initial value of p.t (intermittent factor)
-    
-    for (i in 1:h) {
-      # Croston's method to build DLP on it
-      croston_result <- crost(x[1:t,], h = 1, w = NULL, nop = 2, type = "croston", cost = "mar", init = "naive", init.opt = FALSE, na.rm = TRUE)
-      
-      # Update DLP variables
-      fc.y[t+i] <- croston_result$frc.out
-      fc.tau[t+i] <- t
-      since.Last[t+i] <- 1
-      
-      # Calculate DLP forecast
-      p.t <- 1 / fc.tau[t+i]
-      
-      predictions[i,j] <- (fc.y[t+i] / fc.tau[t+i]) * (h + (since.Last[t+i] - (1 - p.t) / p.t) * (1 - (1 - p.t) ^ h))
-      
-      t = t + 1
-    }
-    
-    print(paste("Done item", j))
-  }
-  
-  # Store predictions as data frame
-  predictions <- as.data.frame(predictions)
-  
-  # Saving
-  file_name <- paste("C:\\Users\\yllor\\OneDrive\\Bureau\\Thesis\\SpareParts\\Stat_Methods\\DLP_", data_name, ".Rda", sep = "")
-  save(predictions, file = file_name)
-  
-  return(predictions)
-}
-
+   
 #SIM1
 DLP_SIM1 <- DLP_Perf(trainSIM1, testSIM1, "SIM1")
 DLP_FAM_SIM1 <- FAM(trainSIM1, testSIM1, DLP_SIM1)
